@@ -1,5 +1,8 @@
 pipeline {
     agent { label 'linux-agent'}
+    tools {
+        maven 'maven'
+    }
     stages {
         stage('Checkout From Git') { 
             steps {
