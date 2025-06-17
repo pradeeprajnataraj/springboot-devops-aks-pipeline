@@ -9,18 +9,18 @@ pipeline {
                 git branch: 'prod', url: 'https://github.com/bkrrajmali/enahanced-petclinc-springboot.git'
             }
         }
-        stage('Maven Compile') { 
-            steps {
-                echo 'This Maven Compile Stage'
-                sh 'mvn compile'
-            }
-        }
-        stage('Maven Test') { 
-            steps {
-                echo 'This Maven Test Stage'
-                sh 'mvn test'
-            }
-        }
+        // stage('Maven Compile') { 
+        //     steps {
+        //         echo 'This Maven Compile Stage'
+        //         sh 'mvn compile'
+        //     }
+        // }
+        // stage('Maven Test') { 
+        //     steps {
+        //         echo 'This Maven Test Stage'
+        //         sh 'mvn test'
+        //     }
+        // }
         stage('File System Scan By Trivy') { 
             steps {
                 echo 'Trivy Scanning Started'
@@ -50,6 +50,12 @@ pipeline {
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
                 }
+            }
+        }
+         stage('Maven Package') { 
+            steps {
+                echo 'This Maven Package Stage'
+                sh 'mvn package'
             }
         }
     }
