@@ -46,14 +46,12 @@ pipeline {
             }
         }
         stage('Sonar Quality Gate') { 
-            steps {
                 echo 'Sonar Quality Gate Stage Started'
                 steps {
                     timeout(time: 1, unit: 'MINUTES') {
                         waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
                     }
                 }
-            }
         }
     }
 }
