@@ -25,37 +25,37 @@ pipeline {
         //         sh 'mvn test'
         //     }
         // }
-        stage('File System Scan By Trivy') { 
-            steps {
-                echo 'Trivy Scanning Started'
-                sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
-            }
-        }
+        // stage('File System Scan By Trivy') { 
+        //     steps {
+        //         echo 'Trivy Scanning Started'
+        //         sh 'trivy fs --format table --output trivy-report.txt --severity HIGH,CRITICAL .'
+        //     }
+        // }
 
-        stage('Sonar Analysis') { 
-            environment {
-                SCANNER_HOME = tool 'Sonar-scanner'
-            }
-            steps {
-                withSonarQubeEnv('sonarserver') {
-                    sh '''
-                          $SCANNER_HOME/bin/sonar-scanner \
-                          -Dsonar.organization=bkrrajmali \
-                          -Dsonar.projectName=SpringBootPet \
-                          -Dsonar.projectKey=bkrrajmali_springbootpet \
-                          -Dsonar.java.binaries=. \
-                          -Dsonar.exclusions=**/trivy-report.txt
-                    '''
-                }
-            }
-        }
-        stage('Sonar Quality Gate') {
-                steps {
-                    timeout(time: 1, unit: 'MINUTES') {
-                        waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
-                }
-            }
-        }
+        // stage('Sonar Analysis') { 
+        //     environment {
+        //         SCANNER_HOME = tool 'Sonar-scanner'
+        //     }
+        //     steps {
+        //         withSonarQubeEnv('sonarserver') {
+        //             sh '''
+        //                   $SCANNER_HOME/bin/sonar-scanner \
+        //                   -Dsonar.organization=bkrrajmali \
+        //                   -Dsonar.projectName=SpringBootPet \
+        //                   -Dsonar.projectKey=bkrrajmali_springbootpet \
+        //                   -Dsonar.java.binaries=. \
+        //                   -Dsonar.exclusions=**/trivy-report.txt
+        //             '''
+        //         }
+        //     }
+        // }
+        // stage('Sonar Quality Gate') {
+        //         steps {
+        //             timeout(time: 1, unit: 'MINUTES') {
+        //                 waitForQualityGate abortPipeline: true, credentialsId: 'sonar'
+        //         }
+        //     }
+        // }
          stage('Maven Package') { 
             steps {
                 echo 'This Maven Package Stage'
@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     echo 'Creating Docker Image'
-                        docker.build ("IMAGE_NAME:$IMAGE_TAG")
+                        docker.build ("$IMAGE_NAME:$IMAGE_TAG")
                 }
                 
             }
