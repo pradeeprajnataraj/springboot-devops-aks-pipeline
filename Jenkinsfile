@@ -10,6 +10,8 @@ pipeline {
         ACR_LOGIN_SERVER="${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
         TENANT_ID = "ec78375d-0db0-42cf-82a6-2e6403e95936"
+        RESOURCE_GROUP = "demo-rg"
+        CLUSTER_NAME = "demo-eks"
     }
     stages {
         stage('Checkout From Git') { 
@@ -98,6 +100,20 @@ pipeline {
                 }
             }
         }
+       stage('Jenkins Login to AKS Cluster') { 
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')])
+                    {
+                script {
+                    sh '''
+                    echo "Jenkins Login to Cluster"
+                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                    az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+                    '''
+                }
+            }
+        }
+    } 
     }
 }
 
