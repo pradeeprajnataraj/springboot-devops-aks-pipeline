@@ -76,12 +76,14 @@ pipeline {
         }
         stage('Azure Login to ACR') { 
             steps {
-            withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')])
+                withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')])
                     echo 'LOGIN TO Azure Container registry '
+                    script {
                     sh '''
                     az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
                     az acr login --name $ACR_NAME
                     '''
+                }
             }
         }
     }
