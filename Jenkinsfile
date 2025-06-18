@@ -7,7 +7,7 @@ pipeline {
         IMAGE_NAME = "springboot"
         IMAGE_TAG = "latest"
         ACR_NAME = "dockerregnodejs"
-        ACR_LOGIN_SERVER="$ACR_NAME.azurecr.io"
+        ACR_LOGIN_SERVER="${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
         TENANT_ID = "ec78375d-0db0-42cf-82a6-2e6403e95936"
     }
