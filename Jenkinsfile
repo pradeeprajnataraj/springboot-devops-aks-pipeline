@@ -6,6 +6,10 @@ pipeline {
     environment {
         IMAGE_NAME = "springboot"
         IMAGE_TAG = "latest"
+        ACR_NAME = "dockerregnodejs"
+        ACR_LOGIN_SERVER="$ACR_NAME.azurecr.io"
+        FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
+        TENANT_ID = "ec78375d-0db0-42cf-82a6-2e6403e95936"
     }
     stages {
         stage('Checkout From Git') { 
@@ -68,6 +72,17 @@ pipeline {
                     echo 'Creating Docker Image'
                         docker.build ("$IMAGE_NAME:$IMAGE_TAG")
                 }
+                
+            }
+        }
+        stage('Azure Login to ACR') { 
+            steps {
+                  withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')])
+                    echo 'LOGIN TO Azure Container registry '
+                    sh '''
+                    az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                    az acr login --name $ACR_NAME
+                    '''
                 
             }
         }
