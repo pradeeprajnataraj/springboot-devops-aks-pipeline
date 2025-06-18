@@ -114,6 +114,17 @@ pipeline {
             }
         }
     } 
+    stage('Deploy to Kubernetes') { 
+            steps {
+                script {
+                    echo 'Deploy to AKS'
+                    sh '''
+                    kubectl apply -f k8s/sprinboot-deployment.yam
+                    echo 'Deployment Done'
+                    '''
+                }
+             }
+        }
     }
 }
 
