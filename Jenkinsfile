@@ -60,32 +60,20 @@ pipeline {
         //         }
         //     }
         // }
-         stage('Maven Package') { 
+        stage('Maven Package') { 
             steps {
                 echo 'This Maven Package Stage'
                 sh 'mvn package'
             }
         }
-          stage('Docker Build') { 
+        stage('Docker Build') { 
             steps {
                 script {
                     echo 'Creating Docker Image'
-                        docker.build ("$IMAGE_NAME:$IMAGE_TAG")
+                        docker.build("$IMAGE_NAME:$IMAGE_TAG")
                 }
-                
             }
         }
-        // stage('Azure Login to ACR') { 
-        //     steps {
-        //           withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')])
-        //             echo 'LOGIN TO Azure Container registry '
-        //             sh '''
-        //             az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-        //             az acr login --name $ACR_NAME
-        //             '''
-                
-        //     }
-        // }
     }
 }
 
