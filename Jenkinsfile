@@ -119,7 +119,7 @@ pipeline {
                 script {
                     echo 'Deploy to AKS'
                     sh '''
-                    kubectl apply -f k8s/sprinboot-deployment.yam
+                    kubectl apply -f k8s/sprinboot-deployment.yaml
                     echo 'Deployment Done'
                     '''
                 }
