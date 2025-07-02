@@ -38,23 +38,24 @@ pipeline {
         //     }
         // }
 
-        // stage('Sonar Analysis') { 
-        //     environment {
-        //         SCANNER_HOME = tool 'Sonar-scanner'
-        //     }
-        //     steps {
-        //         withSonarQubeEnv('sonarserver') {
-        //             sh '''
-        //                   $SCANNER_HOME/bin/sonar-scanner \
-        //                   -Dsonar.organization=bkrrajmali \
-        //                   -Dsonar.projectName=SpringBootPet \
-        //                   -Dsonar.projectKey=bkrrajmali_springbootpet \
-        //                   -Dsonar.java.binaries=. \
-        //                   -Dsonar.exclusions=**/trivy-report.txt
-        //             '''
-        //         }
-        //     }
-        // }
+      stage('Sonar Analysis') {
+    environment {
+        SCANNER_HOME = tool 'SonarScanner'
+    }
+    steps {
+        withSonarQubeEnv('SonarQube') {
+            sh '''
+                ${SCANNER_HOME}/bin/sonar-scanner \
+                  -Dsonar.projectKey=enhanced-petclinic-prod \
+                  -Dsonar.projectName=enhanced-petclinic-prod \
+                  -Dsonar.sources=src \
+                  -Dsonar.java.binaries=target \
+                  -Dsonar.exclusions=**/trivy-report.txt
+            '''
+        }
+    }
+}
+
         // stage('Sonar Quality Gate') {
         //         steps {
         //             timeout(time: 1, unit: 'MINUTES') {
