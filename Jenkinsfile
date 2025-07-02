@@ -31,6 +31,12 @@ pipeline {
         //         sh 'mvn test'
         //     }
         // }
+        // stage('Maven Package') {
+        //      steps {
+        //          echo 'Packaging Application'
+        //          sh 'mvn package'
+        //      }
+        // }
         // stage('File System Scan By Trivy') { 
         //     steps {
         //         echo 'Trivy Scanning Started'
