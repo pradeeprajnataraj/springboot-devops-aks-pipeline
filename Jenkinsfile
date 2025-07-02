@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Checkout From Git') { 
             steps {
-                git branch: 'prod', url: 'https://github.com/bkrrajmali/enahanced-petclinc-springboot.git'
+                git branch: 'main', url: 'https://github.com/pradeeprajnataraj/springboot-devops-aks-pipeline.git'
             }
         }
         // stage('Maven Compile') { 
