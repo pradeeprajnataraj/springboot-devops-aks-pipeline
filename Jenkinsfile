@@ -13,8 +13,8 @@ pipeline {
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
 
         TENANT_ID = "c12cde83-95a5-4183-84f2-f3a185ad86de"
-        RESOURCE_GROUP = "demo-rg"
-        CLUSTER_NAME = "demo-aks"
+        RESOURCE_GROUP = "devops-infra"
+        CLUSTER_NAME = "devops-aks"
     }
 
     stages {
