@@ -105,6 +105,8 @@ pipeline {
                     cd $WORKSPACE/k8s
                     ls -lart
                         kubectl apply -f sprinboot-deployment.yaml
+                        kubectl get pod
+                        kubectl get svc
                         #kubectl apply -f k8s/springboot-deployment.yaml
                         #echo 'Deployment Done'
                         pwd
