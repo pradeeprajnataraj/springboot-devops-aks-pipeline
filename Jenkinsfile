@@ -8,7 +8,7 @@ pipeline {
     environment {
         IMAGE_NAME = "springboot"
         IMAGE_TAG = "latest"
-        ACR_NAME = "dockerregnodejs"
+        ACR_NAME = "dockerregpradeepacr"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
 
