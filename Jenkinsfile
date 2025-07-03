@@ -102,6 +102,7 @@ pipeline {
                 script {
                     echo 'Deploying application to AKS...'
                     sh '''
+                        kubectl apply -f $WORKSPACE/k8s/springboot-deployment.yaml
                         #kubectl apply -f k8s/springboot-deployment.yaml
                         #echo 'Deployment Done'
                         pwd
