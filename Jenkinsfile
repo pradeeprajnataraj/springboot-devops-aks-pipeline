@@ -1,20 +1,24 @@
 pipeline {
     agent any
+
     tools {
         maven 'maven'
     }
+
     environment {
         IMAGE_NAME = "springboot"
         IMAGE_TAG = "latest"
         ACR_NAME = "dockerregnodejs"
         ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
         FULL_IMAGE_NAME = "${ACR_LOGIN_SERVER}/${IMAGE_NAME}:${IMAGE_TAG}"
-        TENANT_ID = "ec78375d-0db0-42cf-82a6-2e6403e95936"
+
+        TENANT_ID = "c12cde83-95a5-4183-84f2-f3a185ad86de"
         RESOURCE_GROUP = "demo-rg"
-        CLUSTER_NAME = "demo-eks"
+        CLUSTER_NAME = "demo-aks"
     }
+
     stages {
-        stage('Checkout From Git') { 
+        stage('Checkout From Git') {
             steps {
                 git branch: 'main', url: 'https://github.com/pradeeprajnataraj/springboot-devops-aks-pipeline.git'
             }
@@ -23,7 +27,7 @@ pipeline {
         stage('Maven Package') {
             steps {
                 echo 'Packaging application...'
-                sh 'mvn package'
+                sh 'mvn clean package'
             }
         }
 
@@ -45,10 +49,10 @@ pipeline {
             }
         }
 
-        stage('Docker Build') { 
+        stage('Docker Build') {
             steps {
                 script {
-                    echo 'Creating Docker Image'
+                    echo 'Creating Docker Image...'
                     docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                 }
             }
@@ -59,8 +63,8 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
                     script {
                         sh '''
-                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                        az acr login --name $ACR_NAME
+                            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                            az acr login --name $ACR_NAME
                         '''
                     }
                 }
@@ -70,10 +74,10 @@ pipeline {
         stage('Docker Push') {
             steps {
                 script {
-                    echo 'Pushing Docker image to registry'
+                    echo 'Pushing Docker image to ACR...'
                     sh '''
-                    docker tag "${IMAGE_NAME}:${IMAGE_TAG}" ${FULL_IMAGE_NAME}
-                    docker push ${FULL_IMAGE_NAME}
+                        docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${FULL_IMAGE_NAME}
+                        docker push ${FULL_IMAGE_NAME}
                     '''
                 }
             }
@@ -84,9 +88,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'azurespn', usernameVariable: 'AZURE_USERNAME', passwordVariable: 'AZURE_PASSWORD')]) {
                     script {
                         sh '''
-                        echo "Logging into AKS cluster"
-                        az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
-                        az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
+                            echo "Logging into AKS..."
+                            az login --service-principal -u $AZURE_USERNAME -p $AZURE_PASSWORD --tenant $TENANT_ID
+                            az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
                         '''
                     }
                 }
@@ -96,10 +100,10 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    echo 'Deploying to AKS'
+                    echo 'Deploying application to AKS...'
                     sh '''
-                    kubectl apply -f k8s/springboot-deployment.yaml
-                    echo 'Deployment Done'
+                        kubectl apply -f k8s/springboot-deployment.yaml
+                        echo 'Deployment Done'
                     '''
                 }
             }
